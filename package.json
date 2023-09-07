@@ -1,0 +1,24 @@
+{
+  "name": "@enix90s/debuggy",
+  "version": "1.0.0",
+  "description": "Simple debugging (only supports) in NodeJS",
+  "main": "index.js",
+  "scripts": {
+    "debug": "DEBUG=debuggy nodemon example.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/enix90s/debuggy.git"
+  },
+  "keywords": [
+    "debug",
+    "log",
+    "cli"
+  ],
+  "author": "Enix90s",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/enix90s/debuggy/issues"
+  },
+  "homepage": "https://github.com/enix90s/debuggy#readme"
+}
