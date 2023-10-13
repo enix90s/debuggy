@@ -4,7 +4,8 @@
   "description": "Simple debugging (only supports) in NodeJS",
   "main": "index.js",
   "scripts": {
-    "debug": "DEBUG=debuggy nodemon example.js"
+    "debug": "DEBUG=debuggy nodemon example.js",
+    "bun": "DEBUG=debuggy bun --watch example.js"
   },
   "repository": {
     "type": "git",

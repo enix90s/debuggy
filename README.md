@@ -1,5 +1,8 @@
 # deBuggy
 
+> **Warning**
+> *This is an experimental.*
+
 Debug your code into terminal with ``file location`` and ``line info`` where your placed it, NodeJS only.
 
 > **_Does you know where you place debugging code in your script?_**
@@ -281,7 +284,8 @@ debuggy('<Byh>My first debuggy<s>')(data)
 
 1. Recomended to use one instance. Use ``global`` for multiple files included.
 2. Writing ``debuggy()`` with one line. 
-3. More information about ``console`` plase visit [NodeJS Console API](https://nodejs.org) or [MDN Console API](https://mozilla.org).
+3. More information about ``console`` plase visit [NodeJS Console API](https://nodejs.org/api/console.html) or [MDN Console API](https://developer.mozilla.org/en-US/docs/Web/API/Console_API).
+4. More examples, see ``examples.js`` or run ``npm run debug`` in your terminal.
 
 *Poor my English, sorry.*
 

@@ -32,6 +32,8 @@ for(let k in colorsCode) {
     color[`:${k}`] = `\x1b[${colorsCode[k]+10}m`
 }
 
+const repeater = (n, w = ' ') => String(w).repeat(n)
+
 const _tpl = (text, repl = {}) => {
     let keys = Object.keys(colorsCode).join('')
     let re = new RegExp(`\<([${keys}\:]+)\>`, 'g')
@@ -42,6 +44,7 @@ const _tpl = (text, repl = {}) => {
         .replace('{line}', repl.line || '')
         .replace('{file}', repl.file || '')
         .replace('{column}', repl.column || '')
+        .replace('{datetime}', new Date())
 
     for(let match of text.matchAll(re)) {
         let ck = match[1].split('').map(item => color[item]).join('')
@@ -50,11 +53,9 @@ const _tpl = (text, repl = {}) => {
     return text
 }
 
-
+// Environment
 const isSetDebuggy = process.env.DEBUG && process.env.DEBUG.includes('debuggy')
 const fakeReturn = () => {}
-
-const repeater = (n, w = ' ') => String(w).repeat(n)
 
 if(isSetDebuggy) {
     const { group, log, groupEnd } = console
@@ -89,6 +90,7 @@ const Timer = new class {
 }
 
 function Debuggy() {
+
     this.version = '1.0.0-dev'
     this.data = {}
 
@@ -140,10 +142,6 @@ function Debuggy() {
                 .filter(i => !!!i.includes('Debuggy.debug '))
                 .slice(0, 2)
 
-			// const stackErr = require('error-stack-parser')
-			// error.stack = stacks.join('\n')
-            // let stacked = stackErr.parse(error)[0]
-
 			const stackInfo = stacks[1].split(' ')
             stackInfo.reverse()
 			const stackedArray = stackInfo[0].replace(/(^\()|(\)$)/g, '').split(':')
@@ -169,13 +167,13 @@ function Debuggy() {
 
     this.debugShow = (...args) => {
 
+        // BunJS doesn't support ``console.table()``
         const { log: _log, count: _count, group: _group, groupEnd: _groupEnd, table: _table } = console
+
         const data = this.data
 		const mode = this.mode
         const { templates } = this._options
 		let template = this.template
-
-        //console.log(data)
 
         const oLabel = data.label
         let label = data.label
@@ -190,18 +188,21 @@ function Debuggy() {
                 arg = JSON.stringify(arg)
                 Timer.begin()
                 _log(arg)
+            
             } else if(oLabel.includes('%t')) {
                 Timer.begin()
                 _table(arg)
-            }
-            else {
+            
+            } else {
                 Timer.begin()
                 _log(arg)
             }
+
             _log(Timer.end(label))
         }
 
         const templateAll = templates?.[template]?.all
+
         if( templateAll && typeof templateAll === 'function' ) {
             templateAll({
                 template: _tpl,
@@ -224,17 +225,16 @@ function Debuggy() {
                 countLabel,
                 mode,
             }, args)
-        }
-        // Default template header:
-        else {
+        
+        } else { // Default template header:
             _log(_tpl(`<hy>########## <s><h>{label}`, replacer))
             _group()
             _log(_tpl(`<hg>Object<s> : <hc>{object}`, replacer))
             _log(_tpl(`<hg>File<s>   : <hm>{file}`, replacer))
             _log(_tpl(`<hg>Line<s>   : <hw>{line}<s>`, replacer))
             _count(_tpl(countLabel))
+            _log(_tpl(`<hg>-------<s>: <h><{datetime}><s>`))
             _groupEnd()
-            _log(_tpl(`<w>  -------: debug<s>`))
         }
 
         label = _tpl(`<hw>${repeater(7,'~')}: <s><hy>`)
@@ -261,16 +261,17 @@ function Debuggy() {
                     Timer.begin()
                     _log(JSON.stringify(args[i]))
                     _groupEnd()
-                }
-                else if(mode[i].includes('%t')) {
+                
+                } else if(mode[i].includes('%t')) {
                     Timer.begin()
                     _table(args[i])
                     _groupEnd()
-                }
-                else {
+                
+                } else {
                     Timer.begin()
                     _log(args[i])
                 }
+
                 _log(Timer.end(label))
                 _groupEnd()
             }
@@ -291,8 +292,8 @@ function Debuggy() {
                 _groupEnd()
                 i++
             }
-        }
-        else if(oLabel.includes('%g')) {
+        
+        } else if(oLabel.includes('%g')) {
             let i = 1
             for(let arg of args) {
                 _group()
@@ -301,15 +302,15 @@ function Debuggy() {
                 _groupEnd()
                 i++
             }
-        }
-        else if(oLabel.includes('%j')) {
+
+        } else if(oLabel.includes('%j')) {
             Timer.begin()
             _group()
             _log(JSON.stringify(args[0]))
             _log(Timer.end(label))
             _groupEnd()
-        }
-        else {
+
+        } else {
             let i = 0;
             for(let arg of args) {
                 _group()
