@@ -1,6 +1,6 @@
 {
   "name": "@enix90s/debuggy",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Simple debugging (only supports) in NodeJS",
   "main": "index.js",
   "scripts": {
